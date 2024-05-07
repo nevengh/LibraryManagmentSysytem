@@ -18,6 +18,7 @@ class BookController extends Controller
     public function index()
     {
         $book = Book::all();
+        $book = Book::with('authors')->get();
         return $this->apiResponse(true, 'data back successfully', $book, Response::HTTP_OK);
     }
 
@@ -30,6 +31,7 @@ class BookController extends Controller
                 'title' => $request->title,
                 'description' => $request->description
             ]);
+            $book->authors()->attach($request->author_id);
             return $this->apiResponse(true, 'data created successfully', $book, Response::HTTP_CREATED);
         } catch (\Exception $error) {
             logger()->error($error);

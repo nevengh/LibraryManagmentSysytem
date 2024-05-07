@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Authentication routes
+
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
@@ -25,11 +27,26 @@ Route::controller(AuthController::class)->group(function () {
 
 });
 
+// BookController routes
+
 Route::get('books',[BookController::class,'index'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 Route::post('books',[BookController::class,'store'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 Route::put('books/{id}',[BookController::class,'update'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 Route::get('books/{id}',[BookController::class,'show'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::delete('books/{id}',[BookController::class,'destroy'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 
-Route::get('authors',[AuthorController::class,'index'])->name('authors');
+
+// AuthorController routes
+
+
+Route::get('authors',[AuthorController::class,'index'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::post('authors',[AuthorController::class,'store'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::put('authors/{id}',[AuthorController::class,'update'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::get('authors/{id}',[AuthorController::class,'show'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::delete('authors/{id}',[AuthController::class,'destroy'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+
+
+// ReviewsControler routes
+
 
 Route::get('reviews',[ReviewController::class,'index'])->name('reviews');
