@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'content',
+        'rate',
+        'reviewable'
+    ];
+
+    public function reviewable()
+    {
+        return $this->morphTo();
+    }
 }

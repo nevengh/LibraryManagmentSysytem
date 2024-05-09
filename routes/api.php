@@ -34,6 +34,8 @@ Route::post('books',[BookController::class,'store'])->middleware(['log_request',
 Route::put('books/{id}',[BookController::class,'update'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 Route::get('books/{id}',[BookController::class,'show'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 Route::delete('books/{id}',[BookController::class,'destroy'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+// Route::post('books/borrowBook/{id}',[BookController::class,'borrowBook'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+// Route::post('books/{id}',[BookController::class,'returnedBook'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 
 
 // AuthorController routes
@@ -49,4 +51,7 @@ Route::delete('authors/{id}',[AuthController::class,'destroy'])->middleware(['lo
 // ReviewsControler routes
 
 
-Route::get('reviews',[ReviewController::class,'index'])->name('reviews');
+
+
+
+

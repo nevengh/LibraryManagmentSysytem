@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DateHelper;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Jobs\BookAdded;
+use App\Jobs\BookBorrowed;
+use App\Jobs\BookReturned;
 use App\Models\Book;
 use App\Traits\ApiResponseTrait;
 use GuzzleHttp\Psr7\Request;
@@ -31,8 +35,10 @@ class BookController extends Controller
                 'title' => $request->title,
                 'description' => $request->description
             ]);
-            $book->authors()->attach($request->author_id);
-            return $this->apiResponse(true, 'data created successfully', $book, Response::HTTP_CREATED);
+            // $book->authors()->attach($request->author_id);
+            BookAdded::dispatch($book);
+            $formattedDate = DateHelper::formatDateTime($book->created_at);
+            return $this->apiResponse(true, 'data created successfully', $book,$formattedDate, Response::HTTP_CREATED);
         } catch (\Exception $error) {
             logger()->error($error);
             return $this->errorResponse('error at create data');
@@ -43,7 +49,9 @@ class BookController extends Controller
     public function show($id){
         $book = Book::find($id);
         $book->all();
-        return $this->apiResponse(true, 'data back successfully', $book, Response::HTTP_OK);
+        $formattedDate = DateHelper::formatDateTime($book->created_at);
+        return $this->apiResponse(true, 'data back successfully', $book,$formattedDate, Response::HTTP_OK);
+
     }
     // Update Data
 
@@ -67,6 +75,63 @@ class BookController extends Controller
             return $this->errorResponse('error at updating data');
         }
     }
+
+    // public function borrowBook(Request $request, $id)
+
+    // {
+
+    //     $book = Book::findOrFail($id);
+
+
+    //     // Check if the book is available for borrowing
+
+    //     if (!$book->isAvailable()) {
+
+    //         return response()->json(['error' => 'The book is currently unavailable.'], 400);
+
+    //     }
+
+
+    //     // Mark the book as borrowed
+
+    //     $book->borrow();
+    //     // Dispatch the BookBorrowed job to send an email notification
+
+    //     dispatch(new BookBorrowed($book));
+    //     return response()->json(['message' => 'The book has been borrowed successfully.']);
+    // }
+
+    // public function returnedBook(Request $request, $id)
+
+    // {
+
+    //     $book = Book::findOrFail($id);
+
+
+    //     // Check if the book is currently borrowed
+
+    //     if (!$book->isBorrowed()) {
+
+    //         return response()->json(['error' => 'The book is not currently borrowed.'], 400);
+
+    //     }
+
+
+    //     // Mark the book as returned
+
+    //     $book->return();
+
+
+    //     // Dispatch the BookReturned job to send an email notification
+
+    //     dispatch(new BookReturned($book));
+
+
+    //     return response()->json(['message' => 'The book has been returned successfully.']);
+
+    // }
+
+
 
     // Delete Data
 

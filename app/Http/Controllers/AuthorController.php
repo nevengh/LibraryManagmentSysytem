@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DateHelper;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Models\Author;
@@ -15,6 +16,7 @@ class AuthorController extends Controller
     public function index(){
         $author = Author::all();
         $author = Author::with('books')->get();
+
         return $this->apiResponse(true, 'data back successfully', $author, Response::HTTP_OK);
     }
 
@@ -28,7 +30,8 @@ class AuthorController extends Controller
                 'bio' => $request->bio
             ]);
             $author->books()->attach($request->book_id);
-            return $this->apiResponse(true, 'data created successfully', $author, Response::HTTP_CREATED);
+            $formattedDate = DateHelper::formatDateTime($author->created_at);
+            return $this->apiResponse(true, 'data created successfully', $author,$formattedDate, Response::HTTP_CREATED);
         } catch (\Exception $error) {
             logger()->error($error);
             return $this->errorResponse('error at create data');

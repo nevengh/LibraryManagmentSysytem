@@ -4,12 +4,13 @@ namespace App\Traits;
 
 trait ApiResponseTrait
 {
-    protected function apiResponse($success , $message , $data = null , $statusCode = 200)
+    protected function apiResponse($success , $message , $data = null ,$formateDate, $statusCode = 200)
     {
         return response()->json([
             'success' => $success,
             'message' => $message,
             'data' => $data,
+            'date'=>$formateDate,
         ],$statusCode);
     }
 
