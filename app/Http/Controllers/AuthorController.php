@@ -15,7 +15,7 @@ class AuthorController extends Controller
     use ApiResponseTrait;
     public function index(){
         $author = Author::all();
-        $author = Author::with('books')->get();
+        $author = Author::with('books','reviews')->get();
 
         return $this->apiResponse(true, 'data back successfully', $author, Response::HTTP_OK);
     }
@@ -29,7 +29,7 @@ class AuthorController extends Controller
                 'name' => $request->name,
                 'bio' => $request->bio
             ]);
-            $author->books()->attach($request->book_id);
+            // $author->books()->attach($request->book_id);
             $formattedDate = DateHelper::formatDateTime($author->created_at);
             return $this->apiResponse(true, 'data created successfully', $author,$formattedDate, Response::HTTP_CREATED);
         } catch (\Exception $error) {
@@ -58,7 +58,7 @@ class AuthorController extends Controller
                 'name' => $request->name,
                 'bio' => $request->bio
             ]);
-            $author->books()->attach($request->book_id);
+            // $author->books()->attach($request->book_id);
             return $this->apiResponse(true, 'data updated successfully', $author, Response::HTTP_OK);
         } catch (\Exception $error) {
             // Log the error

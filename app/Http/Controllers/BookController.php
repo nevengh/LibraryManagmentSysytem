@@ -12,6 +12,7 @@ use App\Models\Book;
 use App\Traits\ApiResponseTrait;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class BookController extends Controller
 {
@@ -21,8 +22,12 @@ class BookController extends Controller
 
     public function index()
     {
-        $book = Book::all();
-        $book = Book::with('authors')->get();
+        $book = Cache::remember('books', 120, function () {
+            return Book::all();
+            return Book::with('authors','reviews')->get();
+        });
+        // $book = Book::all();
+        // $book = Book::with('authors','reviews')->get();
         return $this->apiResponse(true, 'data back successfully', $book, Response::HTTP_OK);
     }
 
@@ -35,7 +40,7 @@ class BookController extends Controller
                 'title' => $request->title,
                 'description' => $request->description
             ]);
-            // $book->authors()->attach($request->author_id);
+            // $book->users()->attach($request->user_id);
             BookAdded::dispatch($book);
             $formattedDate = DateHelper::formatDateTime($book->created_at);
             return $this->apiResponse(true, 'data created successfully', $book,$formattedDate, Response::HTTP_CREATED);
@@ -49,6 +54,7 @@ class BookController extends Controller
     public function show($id){
         $book = Book::find($id);
         $book->all();
+        $book->load('authors','reviews');
         $formattedDate = DateHelper::formatDateTime($book->created_at);
         return $this->apiResponse(true, 'data back successfully', $book,$formattedDate, Response::HTTP_OK);
 
@@ -81,7 +87,7 @@ class BookController extends Controller
     // {
 
     //     $book = Book::findOrFail($id);
-
+    //     $book->users()->attach($request->user_id);
 
     //     // Check if the book is available for borrowing
 
@@ -92,9 +98,9 @@ class BookController extends Controller
     //     }
 
 
-    //     // Mark the book as borrowed
+        // Mark the book as borrowed
 
-    //     $book->borrow();
+        // $book->borrow();
     //     // Dispatch the BookBorrowed job to send an email notification
 
     //     dispatch(new BookBorrowed($book));

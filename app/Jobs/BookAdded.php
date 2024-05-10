@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\NewBookAddedNotification;
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,7 +30,11 @@ class BookAdded implements ShouldQueue
      */
     public function handle(): void
     {
-        $user = Auth::user();
-        Mail::to($user->email)->send(new NewBookAddedNotification($this->book));
+        $users = User::all();
+        foreach ($users as $user) {
+            # code...
+            Mail::to($user->email)->send(new NewBookAddedNotification($this->book));
+        }
+
     }
 }

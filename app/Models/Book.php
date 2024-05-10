@@ -18,6 +18,7 @@ class Book extends Model
         return $this->belongsToMany(Author::class,'author_book');
     }
 
+
     public function reviews()
     {
         return $this->morphMany(Review::class, 'reviewable');
@@ -29,6 +30,7 @@ class Book extends Model
 
         self::bootLogChanges();
     }
+
 
 
 }

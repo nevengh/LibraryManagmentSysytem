@@ -49,7 +49,9 @@ Route::delete('authors/{id}',[AuthController::class,'destroy'])->middleware(['lo
 
 
 // ReviewsControler routes
-
+Route::get('/reviews',[ReviewController::class, 'index'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::post('/add-book-review/{book}',[ReviewController::class, 'storeBookReview'])->middleware(['log_request', 'authorize_user','transaction_manager']);
+Route::post('/add-author-review/{auhor}',[ReviewController::class, 'storeAuthorReview'])->middleware(['log_request', 'authorize_user','transaction_manager']);
 
 
 
