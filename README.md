@@ -7,12 +7,12 @@ This repository contains the source code for a fully functional Web API for a Li
     ```bash
     git clone https://github.com/your-username/library-management-system.git
     ```
-    2-Navigate to the project directory:
+2-Navigate to the project directory:
 
     ```bash
     cd library-management-system
     ```
-    3-Install the required dependencies:
+3-Install the required dependencies:
 ```bash
         composer install
 ```
